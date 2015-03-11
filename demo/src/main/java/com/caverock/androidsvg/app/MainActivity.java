@@ -1,12 +1,18 @@
 package com.caverock.androidsvg.app;
 
-import android.support.v7.app.ActionBarActivity;
+import android.graphics.Color;
+import android.graphics.ColorFilter;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.example.demosvg.R;
-
+import com.caverock.androidsvg.SVG;
+import com.caverock.androidsvg.SVGBuilder;
+import com.caverock.androidsvg.SVGImageView;
+import com.caverock.androidsvg.SVGParseException;
 
 public class MainActivity extends ActionBarActivity {
 
@@ -14,6 +20,28 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        ColorFilter colorFilter = new ColorFilter();
+        SVGImageView svgImageView = (SVGImageView) findViewById(R.id.svgImageView);
+
+        SVG svg = null;
+        try {
+            svg = new SVGBuilder()
+                    .readFromResource(getResources(), R.raw.water)
+                    .setFillColorFilter(new PorterDuffColorFilter(Color.GRAY, PorterDuff.Mode.SRC_IN))
+                    .build();
+
+//            PictureDrawable pictureDrawable = new PictureDrawable(svg.renderToPicture());
+//            Bitmap bitmap = Bitmap.createBitmap(pictureDrawable.getIntrinsicWidth(), pictureDrawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+//            Canvas canvas = new Canvas(bitmap);
+//            canvas.drawPicture(pictureDrawable.getPicture());
+//            svgImageView.setColorFilter(new PorterDuffColorFilter(Color.RED, PorterDuff.Mode.SRC_IN));
+//            svgImageView.setImageBitmap(bitmap);
+
+            svgImageView.setSVG(svg);
+        } catch (SVGParseException e) {
+            e.printStackTrace();
+        }
     }
 
 

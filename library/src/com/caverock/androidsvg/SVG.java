@@ -16,6 +16,20 @@
 
 package com.caverock.androidsvg;
 
+import android.content.Context;
+import android.content.res.AssetManager;
+import android.content.res.Resources;
+import android.graphics.Canvas;
+import android.graphics.ColorFilter;
+import android.graphics.Matrix;
+import android.graphics.Picture;
+import android.graphics.RectF;
+import android.util.Log;
+
+import com.caverock.androidsvg.CSSParser.Ruleset;
+
+import org.xml.sax.SAXException;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,19 +40,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import org.xml.sax.SAXException;
-
-import android.content.Context;
-import android.content.res.AssetManager;
-import android.content.res.Resources;
-import android.graphics.Canvas;
-import android.graphics.Matrix;
-import android.graphics.Picture;
-import android.graphics.RectF;
-import android.util.Log;
-
-import com.caverock.androidsvg.CSSParser.Ruleset;
 
 /**
  * AndroidSVG is a library for reading, parsing and rendering SVG documents on Android devices.
@@ -105,6 +106,7 @@ public class SVG {
     // Map from id attribute to element
     Map<String, SvgElementBase> idToElementMap = new HashMap<String, SvgElementBase>();
 
+    private ColorFilter strokeColorFilter = null, fillColorFilter = null;
 
     protected enum Unit {
         px,
@@ -219,6 +221,14 @@ public class SVG {
     //===============================================================================
 
 
+    public void setStrokeColorFilter(ColorFilter strokeColorFilter) {
+        this.strokeColorFilter = strokeColorFilter;
+    }
+
+    public void setFillColorFilter(ColorFilter fillColorFilter) {
+        this.fillColorFilter = fillColorFilter;
+    }
+
     /**
      * Register an {@link SVGExternalFileResolver} instance that the renderer should use when resolving
      * external references such as images and fonts.
@@ -303,7 +313,7 @@ public class SVG {
         Canvas canvas = picture.beginRecording(widthInPixels, heightInPixels);
         Box viewPort = new Box(0f, 0f, (float) widthInPixels, (float) heightInPixels);
 
-        SVGAndroidRenderer renderer = new SVGAndroidRenderer(canvas, viewPort, this.renderDPI);
+        SVGAndroidRenderer renderer = new SVGAndroidRenderer(canvas, viewPort, this.renderDPI, strokeColorFilter, fillColorFilter);
 
         renderer.renderDocument(this, null, null, false);
 
@@ -343,7 +353,7 @@ public class SVG {
         Canvas canvas = picture.beginRecording(widthInPixels, heightInPixels);
         Box viewPort = new Box(0f, 0f, (float) widthInPixels, (float) heightInPixels);
 
-        SVGAndroidRenderer renderer = new SVGAndroidRenderer(canvas, viewPort, this.renderDPI);
+        SVGAndroidRenderer renderer = new SVGAndroidRenderer(canvas, viewPort, this.renderDPI, strokeColorFilter, fillColorFilter);
 
         renderer.renderDocument(this, view.viewBox, view.preserveAspectRatio, false);
 
@@ -382,7 +392,7 @@ public class SVG {
             svgViewPort = new Box(0f, 0f, (float) canvas.getWidth(), (float) canvas.getHeight());
         }
 
-        SVGAndroidRenderer renderer = new SVGAndroidRenderer(canvas, svgViewPort, this.renderDPI);
+        SVGAndroidRenderer renderer = new SVGAndroidRenderer(canvas, svgViewPort, this.renderDPI, strokeColorFilter, fillColorFilter);
 
         renderer.renderDocument(this, null, null, true);
     }
@@ -442,7 +452,7 @@ public class SVG {
             svgViewPort = new Box(0f, 0f, (float) canvas.getWidth(), (float) canvas.getHeight());
         }
 
-        SVGAndroidRenderer renderer = new SVGAndroidRenderer(canvas, svgViewPort, this.renderDPI);
+        SVGAndroidRenderer renderer = new SVGAndroidRenderer(canvas, svgViewPort, this.renderDPI, strokeColorFilter, fillColorFilter);
 
         renderer.renderDocument(this, view.viewBox, view.preserveAspectRatio, true);
     }

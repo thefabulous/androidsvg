@@ -16,29 +16,6 @@
 
 package com.caverock.androidsvg;
 
-import java.io.BufferedInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
-import java.util.zip.GZIPInputStream;
-
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
-
-import org.xml.sax.Attributes;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import org.xml.sax.XMLReader;
-import org.xml.sax.ext.DefaultHandler2;
-
 import android.graphics.Matrix;
 import android.util.Log;
 
@@ -62,13 +39,36 @@ import com.caverock.androidsvg.SVG.TextPositionedContainer;
 import com.caverock.androidsvg.SVG.TextRoot;
 import com.caverock.androidsvg.SVG.Unit;
 
+import org.xml.sax.Attributes;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
+import org.xml.sax.ext.DefaultHandler2;
+
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
+import java.util.zip.GZIPInputStream;
+
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+
 /**
  * SVG parser code. Used by SVG class. Should not be called directly.
  *
  * @hide
  */
 public class SVGParser extends DefaultHandler2 {
-    private static final String TAG = "SVGParser";
+    public static final String TAG = "SVGParser";
 
     private static final String SVG_NAMESPACE = "http://www.w3.org/2000/svg";
     private static final String XLINK_NAMESPACE = "http://www.w3.org/1999/xlink";

@@ -17,17 +17,10 @@
 package com.caverock.androidsvg;
 
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
-import java.util.Stack;
-
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.ColorFilter;
 import android.graphics.DashPathEffect;
 import android.graphics.LinearGradient;
 import android.graphics.Matrix;
@@ -75,6 +68,14 @@ import com.caverock.androidsvg.SVG.TextContainer;
 import com.caverock.androidsvg.SVG.TextSequence;
 import com.caverock.androidsvg.SVG.Unit;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
+import java.util.Set;
+import java.util.Stack;
+
 /**
  * The rendering part of AndroidSVG.
  * <p/>
@@ -118,6 +119,7 @@ public class SVGAndroidRenderer {
 
     private static HashSet<String> supportedFeatures = null;
 
+    private ColorFilter strokeColorFilter = null, fillColorFilter = null;
 
     private class RendererState implements Cloneable {
         public Style style;
@@ -138,11 +140,13 @@ public class SVGAndroidRenderer {
             fillPaint.setFlags(Paint.ANTI_ALIAS_FLAG | Paint.DEV_KERN_TEXT_FLAG | Paint.SUBPIXEL_TEXT_FLAG);
             fillPaint.setStyle(Paint.Style.FILL);
             fillPaint.setTypeface(Typeface.DEFAULT);
+            fillPaint.setColorFilter(fillColorFilter);
 
             strokePaint = new Paint();
             strokePaint.setFlags(Paint.ANTI_ALIAS_FLAG | Paint.DEV_KERN_TEXT_FLAG | Paint.SUBPIXEL_TEXT_FLAG);
             strokePaint.setStyle(Paint.Style.STROKE);
             strokePaint.setTypeface(Typeface.DEFAULT);
+            strokePaint.setColorFilter(strokeColorFilter);
 
             style = Style.getDefaultStyle();
         }
@@ -198,10 +202,12 @@ public class SVGAndroidRenderer {
     * @param defaultDPI the DPI setting to use when converting real-world units such as centimetres.
     */
 
-    protected SVGAndroidRenderer(Canvas canvas, SVG.Box viewPort, float defaultDPI) {
+    protected SVGAndroidRenderer(Canvas canvas, SVG.Box viewPort, float defaultDPI, ColorFilter strokeColorFilter, ColorFilter fillColorFilter) {
         this.canvas = canvas;
         this.dpi = defaultDPI;
         this.canvasViewPort = viewPort;
+        this.strokeColorFilter = strokeColorFilter;
+        this.fillColorFilter = fillColorFilter;
     }
 
 
